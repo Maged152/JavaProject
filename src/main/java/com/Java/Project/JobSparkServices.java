@@ -1,5 +1,7 @@
 package com.Java.Project;
 
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.ml.clustering.KMeans;
 import org.apache.spark.ml.clustering.KMeansModel;
 import org.apache.spark.ml.feature.StringIndexer;
@@ -12,10 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import static org.apache.spark.sql.functions.col;
+import static org.apache.spark.sql.functions.*;
 
 @Service
 public class JobSparkServices {
@@ -68,35 +73,21 @@ public class JobSparkServices {
         ds.createOrReplaceTempView("titles");
         return sp.sql("SELECT Title, count(Title) as Title_Count from titles group by Title order by Title_Count desc" );
     }
-    //7. Show step 6 in bar chart
-    public CategoryChart barChart(){
-        CategoryChart bar = new CategoryChartBuilder().width(800).height(600).title("Popular Job Tiltles").xAxisTitle("Title").yAxisTitle("Frequency").build();
-        List<String> title = getPopularTitles().select("Tilte").as(Encoders.STRING()).collectAsList();
-        List<Long> count = countJobs().select("Title_Count").as(Encoders.LONG()).collectAsList();
-
-        bar.addSeries("Titles",title, count);
-
-        return bar;
-    }
     //8. Find out the most popular areas?
     public Dataset<Row> getPopularArea(){
         ds.createOrReplaceTempView("Areas");
         return sp.sql("SELECT Location, count(Location) as Location_Count FROM Areas group by Location order by Location_Count desc");
     }
-    //9. Show step 8 in bar chart
-    public CategoryChart barChart2(){
-        CategoryChart bar = new CategoryChartBuilder().width(800).height(600).title("Popular Areas").xAxisTitle("Area").yAxisTitle("Frequency").build();
-        List<String> location = getPopularTitles().select("Location").as(Encoders.STRING()).collectAsList();
-        List<Long> count = countJobs().select("Location_Count").as(Encoders.LONG()).collectAsList();
+    //10.Print skills one by one and how many each repeated and order the output to find out the most important skills required?
+    public Dataset<Row> getPopularSkills(){
 
-        bar.addSeries("Areas",location, count);
+        ds.createOrReplaceTempView("Skills_Job");
+        Dataset<Row> dd=sp.sql("SELECT Skills from Skills_Job");
+        dd= dd.withColumn("Skills",explode(split(col("Skills"),",")));
+        dd.createOrReplaceTempView("Skill_Job");
 
-        return bar;
-    }
-    //10- print Skills
-    public Dataset<Row> Print_Skills(){
-        ds.createOrReplaceTempView("Skill");
-        return sp.sql("SELECT Skills, count(Skills) as Skills_Rep FROM Skill group by Skills order by Skills_Rep desc");
+        return sp.sql("SELECT Skills, count(Skills) as Skills_Rep FROM Skill_Job group by Skills order by Skills_Rep desc");
+
     }
     //11- Factorize exp
     public Dataset<Row> Factorize(){
@@ -153,6 +144,7 @@ public class JobSparkServices {
 
             return predictions.drop("title_Index","company_index","features");
         }
+    //*****************************************//
     }
 
 

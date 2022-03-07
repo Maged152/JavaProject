@@ -63,7 +63,7 @@ public class JobsController {
 
 
     @GetMapping("/showData")  //1 done
-    public Object showData()
+    public String showData()
     {
 
         StringBuilder jobs = new StringBuilder();
@@ -101,12 +101,12 @@ public class JobsController {
     }
 
     @GetMapping("/schemma")  //2.2
-    public Object getschmma()
+    public String getschmma()
     {return jss.getSchema().toString();}
 
 
     @GetMapping("/summary")   //2.1 done
-    public Object getsummary()
+    public String getsummary()
     {
         StringBuilder builder = new StringBuilder();
         builder.append("<h1>Summary</h1>");
@@ -121,7 +121,7 @@ public class JobsController {
 
 
     @GetMapping("/dropNulls")  //3.1  done
-    public Object dropNulls()
+    public String dropNulls()
     {
         StringBuilder jobs = new StringBuilder();
         jobs.append("<h1>Drop nulls</h1>");
@@ -159,7 +159,7 @@ public class JobsController {
     }
 
     @GetMapping("/dropDuplicates")  //3.2 done
-    public Object dropDuplicates()
+    public String dropDuplicates()
     {
         StringBuilder jobs = new StringBuilder();
         jobs.append("<h1>Drop duplicated</h1>");
@@ -196,7 +196,7 @@ public class JobsController {
     }
 
     @GetMapping("/countJobs") //4 done
-    public Object countJobs()
+    public String countJobs()
     {
         StringBuilder jobs = new StringBuilder();
         jobs.append("<h1>Job count</h1>");
@@ -223,7 +223,7 @@ public class JobsController {
 
 
     @GetMapping("/picountJobs") //5 done
-    public Object picountJobs()
+    public String picountJobs()
     {
         StringBuilder builder = new StringBuilder();
         builder.append("<h1>Most Demanded Jobs Pie Chart</h1>");
@@ -234,7 +234,7 @@ public class JobsController {
     }
 
     @GetMapping("/getPopularTitles") //6 done
-    public Object getPopularTitles()
+    public String getPopularTitles()
     {
         StringBuilder jobs = new StringBuilder();
         jobs.append("<h1>the most popular job titles</h1>");
@@ -260,7 +260,7 @@ public class JobsController {
 
 
     @GetMapping("/bargetPopularTitles") //7 done
-    public Object bargetPopularTitles()
+    public String bargetPopularTitles()
     {
         StringBuilder builder = new StringBuilder();
         builder.append("<h1>Most Popular Job Titles Bar Chart</h1>");
@@ -271,7 +271,7 @@ public class JobsController {
     }
 
     @GetMapping("/getPopularArea")  //8 done
-    public Object getPopularArea()
+    public String getPopularArea()
     {
         StringBuilder jobs = new StringBuilder();
         jobs.append("<h1>the most Location</h1>");
@@ -296,7 +296,7 @@ public class JobsController {
     }
 
     @GetMapping("/bargetPopularArea")  //9 done
-    public Object bargetPopularArea()
+    public String bargetPopularArea()
     {
         StringBuilder builder = new StringBuilder();
         builder.append("<h1>Most Popular Job Areas Bar Chart</h1>");
@@ -307,17 +307,18 @@ public class JobsController {
     }
 
     @GetMapping("/Print_Skills")  //10 done
-    public Object Print_Skills()
+    public String getPopularSkills()
     {
         StringBuilder jobs = new StringBuilder();
         jobs.append("<h1>the most Skills</h1>");
         jobs.append("<table style=\"width:100%\">");
         jobs.append(" <tr>")
-                .append("<th>Skills</th>")
-                .append("<th>Skills_Rep</th>")
+                .append("<th>#</th>")
+                .append("<th>Skill</th>")
+                .append("<th>Skill_Rep</th>")
                 .append("</tr>");
         int i = 1;
-        for (Iterator<Row> it = jss.Print_Skills() .withColumn("Skills_Rep",col("Skills_Rep").cast("String")).toLocalIterator(); it.hasNext(); ) {
+        for (Iterator<Row> it = jss.getPopularSkills() .withColumn("Skills_Rep",col("Skills_Rep").cast("String")).toLocalIterator(); it.hasNext(); ) {
             Row row = it.next();
             jobs.append(" <tr>")
                     .append("<th>").append(i).append("</th>")
@@ -332,7 +333,7 @@ public class JobsController {
     }
 
     @GetMapping("/Factorize") //11 done
-    public Object Factorize()
+    public String Factorize()
     {
         StringBuilder jobs = new StringBuilder();
         jobs.append("<h1>factorize</h1>");
@@ -374,7 +375,7 @@ public class JobsController {
 
 
     @GetMapping("/Prediction") //12 done
-    public Object Predict()
+    public String Predict()
     {
         StringBuilder jobs = new StringBuilder();
         jobs.append("<h1>predictions</h1>");
